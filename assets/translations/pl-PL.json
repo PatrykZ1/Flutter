@@ -1,0 +1,16 @@
+{
+    "game_over":"Przegrałeś z wynikiem: {}",
+    "settings":"Ustawienia",
+    "start":"Rozpocznij grę",
+    "pause":"Gra zapauzowana",
+    "cancel":"Anuluj",
+    "confirmation":"Czy na pewno chcesz usunąć swój najlepszy wynik?",
+    "delete":"Usuń",
+    "pop_up":"Wynik został zresetowany",
+    "language":"Język",
+    "theme":"Motyw",
+    "theme_light":"Jasny",
+    "theme_dark":"Ciemny",
+    "close":"Zamknij",
+    "reset":"Reset wyniku"
+}
