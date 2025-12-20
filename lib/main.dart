@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart' hide Route;
+import 'package:flutter/services.dart';
 import 'package:tilerush/game_over_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'starting_screen.dart';
@@ -12,6 +13,7 @@ import 'settings_overlay.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(
     EasyLocalization(
       supportedLocales: [Locale('en', 'US'), Locale('pl', 'PL')],
@@ -39,6 +41,7 @@ class MyApp extends StatelessWidget {
       title: 'TileRush',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
@@ -158,7 +161,7 @@ class RouterGame extends FlameGame {
     add(
       router = RouterComponent(
         routes: {
-          'home': Route(StartPage.new),
+          'home': Route(StartPage.new, maintainState: false),
           'game': WorldRoute(GamePage.new, maintainState: false),
           'settings': WorldRoute(SettingsPage.new, maintainState: true),
           'pause': PauseRoute(),

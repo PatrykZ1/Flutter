@@ -10,7 +10,6 @@ class AppSettings {
   AppSettings._private();
   static final AppSettings _i = AppSettings._private();
   factory AppSettings() => _i;
-  // TODO: check why it doesn't update in other menus
   final ValueNotifier<ThemeMode> themeMode = ValueNotifier(ThemeMode.light);
   final ValueNotifier<Locale> locale = ValueNotifier(const Locale('en', 'US'));
 
@@ -37,11 +36,6 @@ class AppSettings {
   Future<void> resetBestScore() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('bestScore');
-  }
-
-  Future<int> readBestScore() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('bestScore') ?? 0;
   }
 }
 
@@ -195,7 +189,6 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                 ),
                 const SizedBox(height: 12),
 
-                // Motyw
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

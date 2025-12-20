@@ -15,9 +15,6 @@ class SettingsPage extends DecoratedWorld with HasGameReference {
 
   @override
   void onMount() {
-    // hudComponents.addAll([BackButton(), PauseButton()]);
-    // game.camera.viewport.addAll(hudComponents);
-
     game.overlays.add('SettingsOverlay');
   }
 

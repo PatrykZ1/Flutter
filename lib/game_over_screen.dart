@@ -39,7 +39,7 @@ class GameOverPage extends Component
 
   static const double minFont = 18.0;
   static const double maxFont = 96.0;
-  static const double sizeFactor = 0.12;
+  static const double sizeFactor = 0.08;
 
   @override
   void onMount() {
@@ -105,9 +105,6 @@ class GameOverPage extends Component
     // GameOverPage
     game.router.pop();
 
-    // GamePage
-    game.router.pop();
-
-    game.router.pushNamed('home');
+    game.router.pushReplacementNamed('home');
   }
 }
