@@ -10,21 +10,12 @@ class AppSettings {
   AppSettings._private();
   static final AppSettings _i = AppSettings._private();
   factory AppSettings() => _i;
-  final ValueNotifier<ThemeMode> themeMode = ValueNotifier(ThemeMode.light);
   final ValueNotifier<Locale> locale = ValueNotifier(const Locale('en', 'US'));
 
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
-    final t = prefs.getString('theme') ?? 'light';
     final l = prefs.getString('lang') ?? 'en';
-    themeMode.value = (t == 'dark') ? ThemeMode.dark : ThemeMode.light;
     locale.value = Locale(l);
-  }
-
-  Future<void> setTheme(String theme) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('theme', theme);
-    themeMode.value = (theme == 'dark') ? ThemeMode.dark : ThemeMode.light;
   }
 
   Future<void> setLanguage(String lang) async {
@@ -49,7 +40,6 @@ class SettingsOverlay extends StatefulWidget {
 
 class _SettingsOverlayState extends State<SettingsOverlay> {
   String _lang = 'en';
-  String _theme = 'light';
   bool _loading = true;
 
   @override
@@ -62,7 +52,6 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _lang = prefs.getString('lang') ?? 'en';
-      _theme = prefs.getString('theme') ?? 'light';
       _loading = false;
     });
   }
@@ -82,11 +71,6 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
       LocaleNotifier.instance.value = const Locale('pl', 'PL');
     }
     setState(() => _lang = lang);
-  }
-
-  Future<void> _setTheme(String theme) async {
-    await AppSettings().setTheme(theme);
-    setState(() => _theme = theme);
   }
 
   Future<void> _confirmReset() async {
@@ -187,44 +171,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        context.tr("theme"),
-                        style: const TextStyle(color: Colors.white),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Flexible(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          alignment: Alignment.centerRight,
-                          child: ToggleButtons(
-                            isSelected: [_theme == 'light', _theme == 'dark'],
-                            onPressed: (idx) =>
-                                _setTheme(idx == 0 ? 'light' : 'dark'),
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                child: Text(context.tr("theme_light")),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                child: Text(context.tr("theme_dark")),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 16),
 
                 Align(
@@ -234,8 +181,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                     child: Text(context.tr("reset")),
                   ),
                 ),
-                const SizedBox(height: 8),
-
+                const SizedBox(height: 16),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(

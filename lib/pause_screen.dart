@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart' as context;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
@@ -31,12 +31,13 @@ class PauseRoute extends Route {
 
 class PausePage extends Component
     with TapCallbacks, HasGameReference<RouterGame> {
+  late TextComponent pauseText;
   @override
   Future<void> onLoad() async {
     final game = findGame()!;
     addAll([
-      TextComponent(
-        text: context.tr("pause"),
+      pauseText = TextComponent(
+        text: 'pause'.tr(),
         position: game.canvasSize / 2,
         anchor: Anchor.center,
         children: [
@@ -47,6 +48,20 @@ class PausePage extends Component
         ],
       ),
     ]);
+  }
+
+  @override
+  void onMount() {
+    super.onMount();
+    pauseText.removeFromParent();
+    pauseText.text = 'pause'.tr();
+    add(pauseText);
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    pauseText.position = size / 2;
   }
 
   @override

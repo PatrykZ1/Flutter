@@ -325,7 +325,6 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
     try {
       game.camera.viewport.remove(scoreText);
     } catch (_) {}
-
     try {
       for (final p in previews) {
         game.camera.viewport.remove(p);
@@ -342,23 +341,6 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
       } catch (_) {}
       dragGhost = null;
     }
-
-    try {
-      final vpChildren = List<Component>.from(game.camera.viewport.children);
-      for (final vc in vpChildren) {
-        final typeName = vc.runtimeType.toString().toLowerCase();
-        if (vc is BoardComponent ||
-            typeName.contains('board') ||
-            typeName.contains('blockpreview') ||
-            typeName.contains('backbutton') ||
-            typeName.contains('pausebutton') ||
-            typeName.contains('timer') ||
-            typeName.contains('score') ||
-            typeName.contains('dragghost')) {
-          vc.removeFromParent();
-        }
-      }
-    } catch (_) {}
 
     timerRunning = false;
     super.onRemove();
@@ -398,7 +380,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
     _updateDragGhost(resolved);
   }
 
-  void onDragEnd(Vector2 widgetPoint) {
+  Future<void> onDragEnd(Vector2 widgetPoint) async {
     final resolved = _resolveViewportPoint(widgetPoint);
     if (resolved != null) currentPointerViewport = resolved;
 
@@ -427,6 +409,8 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
         if (!anyMoveAvailable()) {
           game.lastScore = score;
           selectedPreviewIndex = null;
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setInt('bestScore', max(score, prefs.getInt('bestScore') ?? 0));
           game.router.pushNamed('game_over');
         }
       }
