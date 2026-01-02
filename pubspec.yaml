@@ -1,5 +1,5 @@
 name: tilerush
-description: "A new Flutter project."
+description: "Block game built with Flutter and Flame."
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -20,7 +20,12 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^5.0.0
+  patrol: ^4.1.0
 
+patrol:
+  app_name: "Tile Rush"
+  android:
+    package_name: com.example.tilerush
 
 flutter:
   uses-material-design: true

@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  dispose_scope:
+    dependency: transitive
+    description:
+      name: dispose_scope
+      sha256: "48ec38ca2631c53c4f8fa96b294c801e55c335db5e3fb9f82cede150cfe5a2af"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   easy_localization:
     dependency: "direct main"
     description:
@@ -73,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.2"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -133,6 +149,22 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.0"
+  http_parser:
+    dependency: transitive
+    description:
+      name: http_parser
+      sha256: "178d74305e7866013777bab2c3d8726205dc5a4dd935297175b19a23a2e66571"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.2"
   intl:
     dependency: transitive
     description:
@@ -141,6 +173,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.20.2"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.9.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -237,6 +277,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  patrol:
+    dependency: "direct dev"
+    description:
+      name: patrol
+      sha256: "75c475671a1114586c5b24ab9dedbc61ba55cac6092c2dcd3776a46a2146da8e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
+  patrol_finders:
+    dependency: transitive
+    description:
+      name: patrol_finders
+      sha256: "2b46426a89498414ee5c24d2fbf34ba1796cc9dff4e49ce4322544bace03be6b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  patrol_log:
+    dependency: transitive
+    description:
+      name: patrol_log
+      sha256: "017fe7ea3ab662e78673a8acbbb7c96b71f38def59b70d44d0169887620e9fbf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.0"
   platform:
     dependency: transitive
     description:
@@ -309,6 +373,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+  shelf:
+    dependency: transitive
+    description:
+      name: shelf
+      sha256: e7dd780a7ffb623c57850b33f43309312fc863fb6aa3d276a754bb299839ef12
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.2"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -362,6 +434,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.6"
+  typed_data:
+    dependency: transitive
+    description:
+      name: typed_data
+      sha256: f9049c039ebfeb4cf7a7104a675823cd72dba8297f264b6637062516699fa006
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   vector_math:
     dependency: transitive
     description:

@@ -1,96 +1,111 @@
-// // test/settings_overlay_widget_test.dart
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:easy_localization/easy_localization.dart';
-// import 'package:tilerush/settings_overlay.dart'; // popraw ścieżkę jeśli potrzeba
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:tilerush/settings_overlay.dart';
+import 'package:tilerush/locale_notifier.dart';
 
-// class TestAssetLoader extends AssetLoader {
-//   const TestAssetLoader();
-//   @override
-//   Future<Map<String, dynamic>> load(String fullPath, Locale locale) async {
-//     return {
-//       "settings": "Settings",
-//       "language": "Language",
-//       "reset": "Reset",
-//       "confirmation": "Are you sure?",
-//       "cancel": "Cancel",
-//       "delete": "Delete",
-//       "pop_up": "Deleted",
-//       "close": "Close",
-//       "score": "Score",
-//     };
-//   }
-// }
+class TestAssetLoader extends AssetLoader {
+  const TestAssetLoader();
 
-// void main() {
-//   // upewnij się, że binding testowy jest zainicjalizowany
-//   TestWidgetsFlutterBinding.ensureInitialized();
+  @override
+  Future<Map<String, dynamic>> load(String fullPath, Locale locale) async {
+    return {
+      "settings": "Settings",
+      "language": "Language",
+      "reset": "Reset",
+      "confirmation": "Are you sure?",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "pop_up": "Deleted",
+      "close": "Close",
+      "score": "Score",
+    };
+  }
+}
 
-//   setUpAll(() async {
-//     // IMPORTANT: najpierw mock SharedPreferences, potem inicjalizacja easy_localization
-//     SharedPreferences.setMockInitialValues({
-//       // domyślne wartości używane w testach
-//       'lang': 'en',
-//       'bestScore': 42,
-//     });
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-//     // teraz można bezpiecznie wywołać ensureInitialized
-//     await EasyLocalization.ensureInitialized();
-//   });
+  setUpAll(() async {
+    // Mock SharedPreferences before initializing easy_localization
+    SharedPreferences.setMockInitialValues({
+      'lang': 'en',
+      'bestScore': 42,
+    });
 
-//   setUp(() async {
-//     // jeżeli chcesz resetować prefsy przed każdym testem:
-//     SharedPreferences.setMockInitialValues({'lang': 'en', 'bestScore': 42});
-//   });
+    LocaleNotifier.instance.value = const Locale('en', 'US');
 
-//   testWidgets('SettingsOverlay loads and toggles language and reset flow', (tester) async {
-//     await tester.pumpWidget(
-//       EasyLocalization(
-//         supportedLocales: const [Locale('en', 'US'), Locale('pl', 'PL')],
-//         path: 'assets/translations',
-//         assetLoader: const TestAssetLoader(),
-//         startLocale: const Locale('en', 'US'),
-//         child: MaterialApp(
-//           home: Builder(builder: (context) {
-//             return Scaffold(
-//               body: SettingsOverlay(),
-//             );
-//           }),
-//         ),
-//       ),
-//     );
+    await EasyLocalization.ensureInitialized();
+  });
 
-//     await tester.pumpAndSettle();
+  setUp(() async {
+    // Reset prefs and notifier before each test
+    SharedPreferences.setMockInitialValues({
+      'lang': 'en',
+      'bestScore': 42,
+    });
+    LocaleNotifier.instance.value = const Locale('en', 'US');
+  });
 
-//     expect(find.text('PL'), findsOneWidget);
-//     expect(find.text('EN'), findsOneWidget);
+  testWidgets('SettingsOverlay loads and toggles language and reset flow', (tester) async {
+    await tester.pumpWidget(
+      EasyLocalization(
+        supportedLocales: const [Locale('en', 'US'), Locale('pl', 'PL')],
+        path: 'assets/translations',
+        assetLoader: const TestAssetLoader(),
+        startLocale: const Locale('en', 'US'),
+        child: Builder(builder: (easyCtx) {
+          return MaterialApp(
+            locale: easyCtx.locale,
+            supportedLocales: easyCtx.supportedLocales,
+            localizationsDelegates: easyCtx.localizationDelegates,
+            home: Scaffold(
+              body: SettingsOverlay(),
+            ),
+          );
+        }),
+      ),
+    );
 
-//     await tester.tap(find.text('PL'));
-//     await tester.pumpAndSettle();
+    await tester.pumpAndSettle();
 
-//     final prefs = await SharedPreferences.getInstance();
-//     expect(prefs.getString('lang'), 'pl');
+    // Verify language toggle buttons are visible
+    expect(find.text('PL'), findsOneWidget);
+    expect(find.text('EN'), findsOneWidget);
 
-//     final resetButton = find.widgetWithText(ElevatedButton, 'Reset');
-//     expect(resetButton, findsOneWidget);
-//     await tester.tap(resetButton);
-//     await tester.pumpAndSettle();
+    // Tap 'PL' to switch language
+    await tester.tap(find.text('PL'));
+    await tester.pumpAndSettle();
 
-//     expect(find.text('Are you sure?'), findsOneWidget);
+    // Verify SharedPreferences updated
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('lang'), 'pl');
 
-//     await tester.tap(find.text('Cancel'));
-//     await tester.pumpAndSettle();
-//     expect(find.text('Are you sure?'), findsNothing);
+    // Reset flow: open confirmation dialog
+    final resetButton = find.widgetWithText(ElevatedButton, 'Reset');
+    expect(resetButton, findsOneWidget);
+    await tester.tap(resetButton);
+    await tester.pumpAndSettle();
 
-//     await tester.tap(resetButton);
-//     await tester.pumpAndSettle();
-//     await tester.tap(find.text('Delete'));
-//     await tester.pumpAndSettle();
+    // Confirmation dialog should appear
+    expect(find.text('Are you sure?'), findsOneWidget);
 
-//     final prefs2 = await SharedPreferences.getInstance();
-//     expect(prefs2.getInt('bestScore'), isNull);
+    // Press Cancel - dialog should close
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(find.text('Are you sure?'), findsNothing);
 
-//     expect(find.text('Deleted'), findsOneWidget);
-//   });
-// }
+    // Open again - press Delete - bestScore removed - SnackBar shown
+    await tester.tap(resetButton);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete'));
+    await tester.pumpAndSettle();
+
+    final prefs2 = await SharedPreferences.getInstance();
+    expect(prefs2.getInt('bestScore'), isNull);
+
+    // SnackBar with "Deleted" should be visible
+    expect(find.text('Deleted'), findsOneWidget);
+  });
+}
