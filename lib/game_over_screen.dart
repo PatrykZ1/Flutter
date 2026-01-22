@@ -35,9 +35,18 @@ class GameOverPage extends Component
   int lastScore = 0;
   int bestScore = 0;
 
-  TextComponent? _textComponent;
+  // ---- blokowanie kliknięć przez określony czas ----
+  bool _locked = true;
+  double _lockedTimer = 2.0; // 2 sekundy
+  // -------------------------------------------------
 
-  static const double minFont = 18.0;
+  TextComponent? _textComponent;
+  TextComponent? _hintText;
+
+  // przechowujemy ostatnio użyty font size by poprawnie ustawić hint pod tekstem
+  double _lastFontSize = 0.0;
+
+  static const double minFont = 12.0;
   static const double maxFont = 96.0;
   static const double sizeFactor = 0.08;
 
@@ -45,6 +54,9 @@ class GameOverPage extends Component
   void onMount() {
     super.onMount();
     lastScore = game.lastScore;
+    _lockedTimer = 2.0;
+    _locked = true;
+    _hintText?.text = "";
     if (_textComponent != null) {
       _textComponent!.text = 'game_over'.tr(args: [lastScore.toString()]);
       _updateTextStyleAndPosition(game.canvasSize);
@@ -65,8 +77,16 @@ class GameOverPage extends Component
       ),
     );
 
+    // hintText tworzymy od razu, ale nie dodajemy do drzewa — będzie dodany dopiero po odblokowaniu
+    _hintText = TextComponent(
+      text: "", // początkowo pusty (nie widoczny)
+      anchor: Anchor.topCenter,
+      position: Vector2(0, 0),
+    );
+
     _updateTextStyleAndPosition(game.canvasSize);
 
+    // dodajemy tylko główny tekst na start
     add(_textComponent!);
   }
 
@@ -77,6 +97,7 @@ class GameOverPage extends Component
 
     double fontSize = smaller * sizeFactor;
     fontSize = max(minFont, min(fontSize, maxFont));
+    _lastFontSize = fontSize;
 
     _textComponent!.textRenderer = TextPaint(
       style: TextStyle(
@@ -89,6 +110,18 @@ class GameOverPage extends Component
     _textComponent!.text = 'game_over'.tr(args: [lastScore.toString()]);
 
     _textComponent!.position = canvasSize / 2;
+
+    if (_hintText != null && !_locked && children.contains(_hintText)) {
+      _hintText!.textRenderer = TextPaint(
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: max(12.0, fontSize * 0.45),
+          fontWeight: FontWeight.w500,
+        ),
+      );
+      _hintText!.position =
+          _textComponent!.position + Vector2(0, _lastFontSize * 0.9);
+    }
   }
 
   @override
@@ -101,10 +134,48 @@ class GameOverPage extends Component
   bool containsLocalPoint(Vector2 point) => true;
 
   @override
-  void onTapDown(TapDownEvent event) {
-    // GameOverPage
-    game.router.pop();
+  void update(double dt) {
+    super.update(dt);
+    if (_locked) {
+      _lockedTimer -= dt;
+      if (_lockedTimer <= 0) {
+        _locked = false;
+        _showHintAndEnableClick();
+      }
+    }
+  }
+  // ---------------------------------------------------------------------------
 
+  void _showHintAndEnableClick() {
+    if (_hintText == null) return;
+
+    _hintText!.textRenderer = TextPaint(
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: max(12.0, _lastFontSize * 0.45),
+        fontWeight: FontWeight.w500,
+      ),
+    );
+
+    _hintText!.text = 'click_to_return'.tr();
+    if (_textComponent != null) {
+      _hintText!.position =
+          _textComponent!.position + Vector2(0, _lastFontSize * 0.9);
+    } else {
+      _hintText!.position = game.canvasSize / 2 + Vector2(0, _lastFontSize * 0.9);
+    }
+
+    if (!children.contains(_hintText)) {
+      add(_hintText as Component);
+    }
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+
+    if (_locked) return;
+
+    game.router.pop();
     game.router.pushReplacementNamed('home');
   }
 }

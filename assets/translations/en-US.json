@@ -14,5 +14,6 @@
     "theme_light":"Light",
     "theme_dark":"Dark",
     "close":"Close",
-    "reset":"Reset best score"
+    "reset":"Reset best score",
+    "click_to_return":"Click to return to main menu"
 }

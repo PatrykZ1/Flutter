@@ -86,9 +86,12 @@ class StartPage extends Component with HasGameReference<RouterGame> {
   @override
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
-    _logo.position = Vector2(size.x / 2, size.y / 3);
-    _scoreText.position = Vector2(size.x / 2, _logo.y + 200);
-    _button1.position = Vector2(size.x / 2, _logo.y + 80);
-    _button2.position = Vector2(size.x / 2, _logo.y + 140);
+    double centerX = size.x / 2;
+    double logoY = size.y / 5;
+    double positionOffset = 60;
+    _logo.position = Vector2(centerX, logoY);
+    _button1.position = Vector2(centerX, logoY + positionOffset * 2);
+    _button2.position = Vector2(centerX, logoY + positionOffset * 3);
+    _scoreText.position = Vector2(centerX, logoY + positionOffset * 4);
   }
 }

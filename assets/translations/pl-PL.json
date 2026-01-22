@@ -14,5 +14,6 @@
     "theme_light":"Jasny",
     "theme_dark":"Ciemny",
     "close":"Zamknij",
-    "reset":"Reset wyniku"
+    "reset":"Reset wyniku",
+    "click_to_return":"Kliknij, aby wrócić do menu głównego"
 }
