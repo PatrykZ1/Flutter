@@ -11,7 +11,7 @@ import 'drag_ghost.dart';
 import 'shapes.dart';
 
 class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
-  static const int initialSeconds = 3;
+  static const int initialSeconds = 60;
   double remaining = initialSeconds.toDouble();
   bool timerRunning = false;
 
@@ -36,6 +36,8 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
   int? draggingPreviewIndex;
   DragGhost? dragGhost;
   Vector2? currentPointerViewport;
+
+  bool gameEnded = false;
 
   @override
   Future<void> onLoad() async {
@@ -81,7 +83,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
     super.update(dt);
     if (game.size != Vector2.zero()) updateTimerPosition(game.size);
 
-    if (!timerRunning) return;
+    if (!timerRunning || gameEnded) return;
 
     remaining -= dt;
     if (remaining <= 0) {
@@ -103,6 +105,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
       timerRunning = false;
       game.lastScore = score;
       selectedPreviewIndex = null;
+      gameEnded = true;
       game.router.pushNamed('game_over');
     }
 
@@ -259,6 +262,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
   }
 
   void selectPreview(int index) {
+    if(!timerRunning || gameEnded) return;
     if (index < 0 || index >= previews.length) return;
     if (previews[index].isEmpty) {
       selectedPreviewIndex = null;
@@ -299,6 +303,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
   void resetGameState() {
     score = 0;
     comboMultiplier = 1;
+    gameEnded = false;
     selectedPreviewIndex = null;
     remaining = initialSeconds.toDouble();
     timerRunning = true;
@@ -348,6 +353,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
   }
 
   void onDragStart(Vector2 widgetPoint) {
+    if(gameEnded) return;
     final resolved = _resolveViewportPoint(widgetPoint);
     if (resolved == null) return;
     currentPointerViewport = resolved;
@@ -382,6 +388,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
   }
 
   Future<void> onDragEnd(Vector2 widgetPoint) async {
+    if(gameEnded) return;
     final resolved = _resolveViewportPoint(widgetPoint);
     if (resolved != null) currentPointerViewport = resolved;
 
@@ -412,6 +419,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
           selectedPreviewIndex = null;
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setInt('bestScore', max(score, prefs.getInt('bestScore') ?? 0));
+          gameEnded = true;
           game.router.pushNamed('game_over');
         }
       }
