@@ -9,7 +9,8 @@ import 'package:patrol/src/platform/contracts/contracts.dart';
 import 'package:test_api/src/backend/invoker.dart';
 
 // START: GENERATED TEST IMPORTS
-import 'minimal_test.dart' as __minimal_test;
+import 'minimal_test.dart' as minimal_test;
+import 'settings_overlay_test.dart' as settings_overlay_test;
 // END: GENERATED TEST IMPORTS
 
 Future<void> main() async {
@@ -72,7 +73,8 @@ Future<void> main() async {
   });
 
   // START: GENERATED TEST GROUPS
-  group('.minimal_test', __minimal_test.main);
+  group('minimal_test', minimal_test.main);
+  group('settings_overlay_test', settings_overlay_test.main);
   // END: GENERATED TEST GROUPS
 
   final dartTestGroup = await testExplorationCompleter.future;

@@ -1,4 +1,3 @@
-// clear_animations.dart
 import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,7 @@ class ClearCellEffect extends PositionComponent {
   final Color baseColor;
   final double cellSize;
   final double duration; // seconds
-  final double scaleAmount; // how much to scale up (e.g. 0.15 -> 15%)
+  final double scaleAmount;
   final double hueShiftSpeed; // degrees per second
 
   double _elapsed = 0;
@@ -19,7 +18,7 @@ class ClearCellEffect extends PositionComponent {
     required this.cellSize,
     this.duration = 0.6,
     this.scaleAmount = 0.18,
-    this.hueShiftSpeed = 420.0, // how fast the rainbow cycles (deg/s)
+    this.hueShiftSpeed = 420.0, // how fast the rainbow cycles
   }) : _hueOffset = Random().nextDouble() * 360.0,
        super(position: localTopLeft, size: Vector2(cellSize, cellSize));
 

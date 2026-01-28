@@ -314,6 +314,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
     } catch (_) {}
   }
 
+  // needed for intenationalization changes
   @override
   void onRemove() {
     try {

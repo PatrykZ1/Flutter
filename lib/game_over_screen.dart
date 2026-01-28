@@ -35,15 +35,12 @@ class GameOverPage extends Component
   int lastScore = 0;
   int bestScore = 0;
 
-  // ---- blokowanie kliknięć przez określony czas ----
   bool _locked = true;
-  double _lockedTimer = 2.0; // 2 sekundy
-  // -------------------------------------------------
+  double _lockedTimer = 2.0;
 
   TextComponent? _textComponent;
   TextComponent? _hintText;
 
-  // przechowujemy ostatnio użyty font size by poprawnie ustawić hint pod tekstem
   double _lastFontSize = 0.0;
 
   static const double minFont = 12.0;
@@ -77,16 +74,14 @@ class GameOverPage extends Component
       ),
     );
 
-    // hintText tworzymy od razu, ale nie dodajemy do drzewa — będzie dodany dopiero po odblokowaniu
     _hintText = TextComponent(
-      text: "", // początkowo pusty (nie widoczny)
+      text: "",
       anchor: Anchor.topCenter,
       position: Vector2(0, 0),
     );
 
     _updateTextStyleAndPosition(game.canvasSize);
 
-    // dodajemy tylko główny tekst na start
     add(_textComponent!);
   }
 
@@ -144,7 +139,6 @@ class GameOverPage extends Component
       }
     }
   }
-  // ---------------------------------------------------------------------------
 
   void _showHintAndEnableClick() {
     if (_hintText == null) return;
@@ -162,7 +156,8 @@ class GameOverPage extends Component
       _hintText!.position =
           _textComponent!.position + Vector2(0, _lastFontSize * 0.9);
     } else {
-      _hintText!.position = game.canvasSize / 2 + Vector2(0, _lastFontSize * 0.9);
+      _hintText!.position =
+          game.canvasSize / 2 + Vector2(0, _lastFontSize * 0.9);
     }
 
     if (!children.contains(_hintText)) {
@@ -172,7 +167,6 @@ class GameOverPage extends Component
 
   @override
   void onTapDown(TapDownEvent event) {
-
     if (_locked) return;
 
     game.router.pop();

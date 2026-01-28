@@ -164,7 +164,6 @@ class BoardComponent extends PositionComponent {
       if (full) colsToClear.add(c);
     }
 
-    // Collect unique cells to clear (avoid double-clearing intersections twice)
     final cellsToClear = <Point<int>>{};
 
     for (final r in rowsToClear) {
@@ -178,17 +177,14 @@ class BoardComponent extends PositionComponent {
       }
     }
 
-    // For each cell: capture color, set occupied to null for game logic, spawn visual effect
     for (final pt in cellsToClear) {
       final x = pt.x;
       final y = pt.y;
       final cellColor = occupied[y][x];
       if (cellColor == null) continue; // skip if already empty
 
-      // set to null so game logic sees cleared board immediately
       occupied[y][x] = null;
 
-      // spawn clear effect as a child of the board so it draws in board-local coords
       final localTopLeft = Vector2(x * cellSize, y * cellSize);
       final effect = ClearCellEffect(
         baseColor: cellColor,

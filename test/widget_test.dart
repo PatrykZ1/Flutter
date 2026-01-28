@@ -29,10 +29,7 @@ void main() {
 
   setUpAll(() async {
     // Mock SharedPreferences before initializing easy_localization
-    SharedPreferences.setMockInitialValues({
-      'lang': 'en',
-      'bestScore': 42,
-    });
+    SharedPreferences.setMockInitialValues({'lang': 'en', 'bestScore': 42});
 
     LocaleNotifier.instance.value = const Locale('en', 'US');
 
@@ -41,30 +38,29 @@ void main() {
 
   setUp(() async {
     // Reset prefs and notifier before each test
-    SharedPreferences.setMockInitialValues({
-      'lang': 'en',
-      'bestScore': 42,
-    });
+    SharedPreferences.setMockInitialValues({'lang': 'en', 'bestScore': 42});
     LocaleNotifier.instance.value = const Locale('en', 'US');
   });
 
-  testWidgets('SettingsOverlay loads and toggles language and reset flow', (tester) async {
+  testWidgets('SettingsOverlay loads and toggles language and reset flow', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       EasyLocalization(
         supportedLocales: const [Locale('en', 'US'), Locale('pl', 'PL')],
         path: 'assets/translations',
         assetLoader: const TestAssetLoader(),
         startLocale: const Locale('en', 'US'),
-        child: Builder(builder: (easyCtx) {
-          return MaterialApp(
-            locale: easyCtx.locale,
-            supportedLocales: easyCtx.supportedLocales,
-            localizationsDelegates: easyCtx.localizationDelegates,
-            home: Scaffold(
-              body: SettingsOverlay(),
-            ),
-          );
-        }),
+        child: Builder(
+          builder: (easyCtx) {
+            return MaterialApp(
+              locale: easyCtx.locale,
+              supportedLocales: easyCtx.supportedLocales,
+              localizationsDelegates: easyCtx.localizationDelegates,
+              home: Scaffold(body: SettingsOverlay()),
+            );
+          },
+        ),
       ),
     );
 
