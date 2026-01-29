@@ -1,0 +1,53 @@
+name: Build Flutter Web and Deploy to user-site repo
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+
+      - name: Install deps
+        run: flutter pub get
+
+      - name: Run analyze & tests
+        run: |
+          flutter analyze || true
+          flutter test || true
+
+      - name: Build web
+        run: flutter build web --release
+
+      - name: Deploy to user-site repo
+        env:
+          TARGET_REPO: PatrykZ1/PatrykZ1.github.io
+          GITHUB_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
+        run: |
+          # clone target repo
+          git clone --depth 1 https://x-access-token:${GITHUB_TOKEN}@github.com/${TARGET_REPO}.git deploy-temp
+          cd deploy-temp
+          # ensure on main branch (create if missing)
+          git checkout -B main || git checkout -b main
+          # remove old content but keep .git
+          git rm -rf . || true
+          cd ..
+          # copy new build in
+          cp -r build/web/* deploy-temp/
+          cd deploy-temp
+          git add -A
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "Auto deploy from source @${GITHUB_SHA::7}" || echo "No changes to commit"
+          # force push to main of target repo
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${TARGET_REPO}.git HEAD:main --force
