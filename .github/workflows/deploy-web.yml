@@ -26,7 +26,7 @@ jobs:
 
       - name: Deploy to GitHub Pages repo
         env:
-          GH_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN_DEPLOY }}
         run: |
           echo "Checking environment..."
           if [ -z "$GH_TOKEN" ]; then
