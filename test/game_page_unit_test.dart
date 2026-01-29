@@ -41,7 +41,7 @@ void main() {
       'selectPreview sets selectedPreviewIndex and toggles selected flags',
       () {
         final g = TestGamePage();
-
+        g.timerRunning = true;
         final p1 = BlockPreview(index: 0);
         final p2 = BlockPreview(index: 1);
         final p3 = BlockPreview(index: 2);

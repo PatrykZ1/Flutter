@@ -262,7 +262,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
   }
 
   void selectPreview(int index) {
-    if(!timerRunning || gameEnded) return;
+    if (!timerRunning || gameEnded) return;
     if (index < 0 || index >= previews.length) return;
     if (previews[index].isEmpty) {
       selectedPreviewIndex = null;
@@ -319,7 +319,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
     } catch (_) {}
   }
 
-  // needed for intenationalization changes
+  // needed for internationalization changes
   @override
   void onRemove() {
     try {
@@ -353,7 +353,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
   }
 
   void onDragStart(Vector2 widgetPoint) {
-    if(gameEnded) return;
+    if (gameEnded) return;
     final resolved = _resolveViewportPoint(widgetPoint);
     if (resolved == null) return;
     currentPointerViewport = resolved;
@@ -388,7 +388,7 @@ class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
   }
 
   Future<void> onDragEnd(Vector2 widgetPoint) async {
-    if(gameEnded) return;
+    if (gameEnded) return;
     final resolved = _resolveViewportPoint(widgetPoint);
     if (resolved != null) currentPointerViewport = resolved;
 

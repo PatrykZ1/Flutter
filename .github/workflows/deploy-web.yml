@@ -28,18 +28,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN_DEPLOY }}
         run: |
-
           cd build/web
           git init
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-
           git add .
-          
           git diff-index --quiet HEAD || git commit -m "Deploy Flutter web"
-
           git remote add origin https://x-access-token:${GH_TOKEN}@github.com/PatrykZ1/PatrykZ1.github.io.git
-
           git push --force origin master
 
         
