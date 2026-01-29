@@ -11,7 +11,7 @@ import 'drag_ghost.dart';
 import 'shapes.dart';
 
 class GamePage extends DecoratedWorld with HasGameReference<RouterGame> {
-  static const int initialSeconds = 120;
+  static const int initialSeconds = 90;
   double remaining = initialSeconds.toDouble();
   bool timerRunning = false;
 
