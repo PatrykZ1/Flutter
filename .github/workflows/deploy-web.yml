@@ -28,13 +28,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN_DEPLOY }}
         run: |
-          echo "Checking environment..."
-          if [ -z "$GH_TOKEN" ]; then
-            echo "GH_TOKEN is empty!"
-            exit 1
-          else
-            echo "GH_TOKEN is set (not printing for security)."
-          fi
 
           cd build/web
           git init
@@ -43,13 +36,10 @@ jobs:
 
           git add .
           
-          # commit tylko jeśli są zmiany
           git diff-index --quiet HEAD || git commit -m "Deploy Flutter web"
 
-          # sprawdzamy, czy remote został dodany poprawnie
           git remote add origin https://x-access-token:${GH_TOKEN}@github.com/PatrykZ1/PatrykZ1.github.io.git
 
-          echo "Pushing to GitHub Pages..."
           git push --force origin master
 
         
