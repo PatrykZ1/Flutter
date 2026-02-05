@@ -1,7 +1,6 @@
-// test/game_page_unit_test.dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tilerush/game_screen.dart';
-import 'package:tilerush/block_preview.dart'; // -> popraw ścieżkę jeśli inna
+import 'package:tilerush/block_preview.dart';
 
 class TestGamePage extends GamePage {
   TestGamePage() : super();
@@ -59,7 +58,7 @@ void main() {
         expect(g.previews[1].selected, false);
         expect(g.previews[2].selected, false);
 
-        // select empty preview (index 1) -> musi usunąć zaznaczenie
+        // select empty preview (index 1)
         g.selectPreview(1);
         expect(g.selectedPreviewIndex, null);
 
